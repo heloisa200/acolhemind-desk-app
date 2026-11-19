@@ -2,11 +2,8 @@ from database.connection import conectar
 
 class PacienteRepository:
 
-    def salvar(
-        self,
-        nome,
-        condicao
-    ):
+      @staticmethod
+    def listar():
 
         conn = conectar()
 
@@ -14,22 +11,16 @@ class PacienteRepository:
 
         cursor.execute(
             """
-            INSERT INTO pacientes
-            (
+            SELECT
+                id,
                 nome,
                 condicao
-            )
-            VALUES
-            (
-                ?,
-                ?
-            )
-            """,
-            (
-                nome,
-                condicao
-            )
+            FROM pacientes
+            """
         )
 
-        conn.commit()
+        dados = cursor.fetchall()
+
         conn.close()
+
+        return dados
