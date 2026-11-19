@@ -1,8 +1,38 @@
 from database.connection import conectar
 
+
 class PacienteRepository:
 
-      @staticmethod
+    @staticmethod
+    def salvar(nome, condicao):
+
+        conn = conectar()
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            INSERT INTO pacientes
+            (
+                nome,
+                condicao
+            )
+            VALUES
+            (
+                ?,
+                ?
+            )
+            """,
+            (
+                nome,
+                condicao
+            )
+        )
+
+        conn.commit()
+        conn.close()
+
+    @staticmethod
     def listar():
 
         conn = conectar()
@@ -16,11 +46,12 @@ class PacienteRepository:
                 nome,
                 condicao
             FROM pacientes
+            ORDER BY id DESC
             """
         )
 
-        dados = cursor.fetchall()
+        pacientes = cursor.fetchall()
 
         conn.close()
 
-        return dados
+        return pacientes
