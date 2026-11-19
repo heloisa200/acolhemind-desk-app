@@ -99,6 +99,15 @@ class MainWindow:
         )
 
         consulta_btn.pack(pady=5)
+        historico_btn = ctk.CTkButton(
+            self.root,
+            text="Ver Histórico",
+            command=self.carregar_historico
+        )
+
+        historico_btn.pack(
+            pady=5
+        )
 
         self.lista_pacientes = ctk.CTkTextbox(
             self.root,
@@ -107,6 +116,15 @@ class MainWindow:
         )
 
         self.lista_pacientes.pack(pady=20)
+        self.historico = ctk.CTkTextbox(
+            self.root,
+            width=700,
+            height=200
+        )
+
+        self.historico.pack(
+            pady=20
+        )
 
         self.atualizar_lista()
 
@@ -205,6 +223,39 @@ class MainWindow:
         )
 
         print("CONSULTA GRAVADA")
+    def carregar_historico(self):
+
+        paciente = self.paciente_selecionado.get()
+
+        if paciente == "Selecione um paciente":
+            return
+
+        paciente_id = int(
+            paciente.split("-")[0].strip()
+        )
+
+        consultas = (
+            ConsultaRepository
+            .listar_por_paciente(
+                paciente_id
+            )
+        )
+
+        self.historico.delete(
+            "0.0",
+            "end"
+        )
+
+        for consulta in consultas:
+
+            self.historico.insert(
+                "end",
+                f"Data: {consulta[3]}\n"
+                f"Motivo: {consulta[0]}\n"
+                f"Sintoma: {consulta[1]}\n"
+                f"Observação: {consulta[2]}\n"
+                "------------------------\n"
+            )
 
     def executar(self):
 

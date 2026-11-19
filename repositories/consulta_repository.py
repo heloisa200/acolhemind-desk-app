@@ -66,3 +66,33 @@ class ConsultaRepository:
         conn.close()
 
         return consultas
+    @staticmethod
+    def listar_por_paciente(
+        paciente_id
+    ):
+
+        conn = conectar()
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            SELECT
+                motivo,
+                sintoma,
+                observacao,
+                data_consulta
+            FROM consultas
+            WHERE paciente_id = ?
+            ORDER BY id DESC
+            """,
+            (
+                paciente_id,
+            )
+        )
+
+        dados = cursor.fetchall()
+
+        conn.close()
+
+        return dados
