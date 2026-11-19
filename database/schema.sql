@@ -1,0 +1,12 @@
+CREATE TABLE pacientes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    nome TEXT NOT NULL,
+    condicao TEXT NOT NULL
+);
+
+CREATE TABLE relatorios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    paciente_id INTEGER,
+    resumo TEXT,
+    data_criacao DATETIME DEFAULT CURRENT_TIMESTAMP
+);
