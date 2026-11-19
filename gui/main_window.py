@@ -44,6 +44,14 @@ class MainWindow:
         )
 
         self.condicao.pack(pady=10)
+        self.paciente_selecionado = ctk.CTkComboBox(
+            self.root,
+            values=["Selecione um paciente"]
+        )
+
+        self.paciente_selecionado.pack(
+            pady=10
+        )
 
         salvar = ctk.CTkButton(
             self.root,
@@ -71,6 +79,17 @@ class MainWindow:
         )
 
         pacientes = PacienteRepository.listar()
+        nomes = []
+
+        for paciente in pacientes:
+            nomes.append(
+                f"{paciente[0]} - {paciente[1]}"
+            )
+
+        if nomes:
+            self.paciente_selecionado.configure(
+                values=nomes
+            )
 
         for paciente in pacientes:
 
