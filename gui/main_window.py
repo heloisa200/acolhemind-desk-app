@@ -4,6 +4,10 @@ from repositories.paciente_repository import (
     PacienteRepository
 )
 
+from repositories.consulta_repository import (
+    ConsultaRepository
+)
+
 
 class MainWindow:
 
@@ -23,7 +27,7 @@ class MainWindow:
 
         titulo = ctk.CTkLabel(
             self.root,
-            text="AcolheMind - Cadastro de Pacientes",
+            text="AcolheMind",
             font=("Arial", 24, "bold")
         )
 
@@ -44,27 +48,58 @@ class MainWindow:
         )
 
         self.condicao.pack(pady=10)
+
         self.paciente_selecionado = ctk.CTkComboBox(
             self.root,
             values=["Selecione um paciente"]
         )
 
-        self.paciente_selecionado.pack(
-            pady=10
+        self.paciente_selecionado.pack(pady=10)
+
+        self.motivo = ctk.CTkEntry(
+            self.root,
+            width=600,
+            placeholder_text="Motivo da consulta"
         )
 
-        salvar = ctk.CTkButton(
+        self.motivo.pack(pady=10)
+
+        self.sintoma = ctk.CTkTextbox(
+            self.root,
+            width=700,
+            height=120
+        )
+
+        self.sintoma.pack(pady=10)
+
+        self.observacao = ctk.CTkTextbox(
+            self.root,
+            width=700,
+            height=120
+        )
+
+        self.observacao.pack(pady=10)
+
+        salvar_btn = ctk.CTkButton(
             self.root,
             text="Salvar Paciente",
             command=self.salvar
         )
 
-        salvar.pack(pady=10)
+        salvar_btn.pack(pady=5)
+
+        consulta_btn = ctk.CTkButton(
+            self.root,
+            text="Registrar Consulta",
+            command=self.salvar_consulta
+        )
+
+        consulta_btn.pack(pady=5)
 
         self.lista_pacientes = ctk.CTkTextbox(
             self.root,
             width=700,
-            height=250
+            height=150
         )
 
         self.lista_pacientes.pack(pady=20)
@@ -79,14 +114,17 @@ class MainWindow:
         )
 
         pacientes = PacienteRepository.listar()
+
         nomes = []
 
         for paciente in pacientes:
+
             nomes.append(
                 f"{paciente[0]} - {paciente[1]}"
             )
 
         if nomes:
+
             self.paciente_selecionado.configure(
                 values=nomes
             )
@@ -125,6 +163,38 @@ class MainWindow:
         )
 
         self.atualizar_lista()
+
+    def salvar_consulta(self):
+
+        paciente = self.paciente_selecionado.get()
+
+        if paciente == "Selecione um paciente":
+            return
+
+        paciente_id = int(
+            paciente.split("-")[0].strip()
+        )
+
+        motivo = self.motivo.get()
+
+        sintoma = self.sintoma.get(
+            "0.0",
+            "end"
+        )
+
+        observacao = self.observacao.get(
+            "0.0",
+            "end"
+        )
+
+        ConsultaRepository.salvar(
+            paciente_id,
+            motivo,
+            sintoma,
+            observacao
+        )
+
+        print("CONSULTA GRAVADA")
 
     def executar(self):
 

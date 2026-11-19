@@ -6,7 +6,10 @@ conn = sqlite3.connect(
 )
 
 df = pd.read_sql(
-    "SELECT * FROM consultas",
+    """
+    SELECT *
+    FROM consultas
+    """,
     conn
 )
 

@@ -11,6 +11,8 @@ class ConsultaRepository:
         observacao
     ):
 
+        print("ENTROU NO REPOSITORY")
+
         conn = conectar()
 
         cursor = conn.cursor()
