@@ -1,19 +1,34 @@
-def gerar_resumo(
+from services.pdf_service import gerar_pdf
+
+
+def gerar_relatorio_pdf(
     paciente,
     motivo,
     sintoma,
     observacao
 ):
 
-    return f"""
-PACIENTE: {paciente}
+    texto = f"""
+ACOLHEMIND
 
-MOTIVO:
+Paciente:
+{paciente}
+
+Motivo:
 {motivo}
 
-SINTOMAS:
+Sintomas:
 {sintoma}
 
-OBSERVAÇÕES:
+Observações:
 {observacao}
 """
+
+    arquivo = (
+        f"exports/{paciente}.pdf"
+    )
+
+    gerar_pdf(
+        texto,
+        arquivo
+    )

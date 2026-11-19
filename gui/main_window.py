@@ -8,6 +8,10 @@ from repositories.consulta_repository import (
     ConsultaRepository
 )
 
+from services.relatorio_service import (
+    gerar_relatorio_pdf
+)
+
 
 class MainWindow:
 
@@ -19,7 +23,7 @@ class MainWindow:
 
         self.root.title("AcolheMind")
 
-        self.root.geometry("1000x700")
+        self.root.geometry("1000x800")
 
         self.criar_tela()
 
@@ -83,7 +87,7 @@ class MainWindow:
         salvar_btn = ctk.CTkButton(
             self.root,
             text="Salvar Paciente",
-            command=self.salvar
+            command=self.salvar_paciente
         )
 
         salvar_btn.pack(pady=5)
@@ -99,7 +103,7 @@ class MainWindow:
         self.lista_pacientes = ctk.CTkTextbox(
             self.root,
             width=700,
-            height=150
+            height=180
         )
 
         self.lista_pacientes.pack(pady=20)
@@ -123,14 +127,6 @@ class MainWindow:
                 f"{paciente[0]} - {paciente[1]}"
             )
 
-        if nomes:
-
-            self.paciente_selecionado.configure(
-                values=nomes
-            )
-
-        for paciente in pacientes:
-
             self.lista_pacientes.insert(
                 "end",
                 f"{paciente[0]} - "
@@ -138,7 +134,13 @@ class MainWindow:
                 f"{paciente[2]}\n"
             )
 
-    def salvar(self):
+        if nomes:
+
+            self.paciente_selecionado.configure(
+                values=nomes
+            )
+
+    def salvar_paciente(self):
 
         nome = self.nome.get()
 
@@ -169,6 +171,7 @@ class MainWindow:
         paciente = self.paciente_selecionado.get()
 
         if paciente == "Selecione um paciente":
+            print("Selecione um paciente")
             return
 
         paciente_id = int(
@@ -189,6 +192,13 @@ class MainWindow:
 
         ConsultaRepository.salvar(
             paciente_id,
+            motivo,
+            sintoma,
+            observacao
+        )
+
+        gerar_relatorio_pdf(
+            paciente,
             motivo,
             sintoma,
             observacao
