@@ -6,18 +6,14 @@ from repositories.paciente_repository import (
 class PacienteService:
 
     @staticmethod
-    def salvar(
+    def atualizar(
+        paciente_id,
         nome,
         condicao
     ):
 
-        if not nome:
-            return False
-
-        if not condicao:
-            return False
-
-        PacienteRepository.salvar(
+        PacienteRepository.atualizar(
+            paciente_id,
             nome,
             condicao
         )
@@ -25,9 +21,12 @@ class PacienteService:
         return True
 
     @staticmethod
-    def listar():
+    def excluir(
+        paciente_id
+    ):
 
-        return (
-            PacienteRepository
-            .listar()
+        PacienteRepository.excluir(
+            paciente_id
         )
+
+        return True
