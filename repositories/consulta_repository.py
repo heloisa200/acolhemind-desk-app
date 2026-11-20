@@ -11,8 +11,6 @@ class ConsultaRepository:
         observacao
     ):
 
-        print("ENTROU NO REPOSITORY")
-
         conn = conectar()
 
         cursor = conn.cursor()
@@ -66,6 +64,7 @@ class ConsultaRepository:
         conn.close()
 
         return consultas
+
     @staticmethod
     def listar_por_paciente(
         paciente_id
@@ -91,8 +90,8 @@ class ConsultaRepository:
             )
         )
 
-        dados = cursor.fetchall()
+        consultas = cursor.fetchall()
 
         conn.close()
 
-        return dados
+        return consultas

@@ -18,12 +18,13 @@ class MainWindow:
     def __init__(self):
 
         ctk.set_appearance_mode("light")
+        ctk.set_default_color_theme("blue")
 
         self.root = ctk.CTk()
 
         self.root.title("AcolheMind")
 
-        self.root.geometry("1000x800")
+        self.root.geometry("1200x900")
 
         self.criar_tela()
 
@@ -32,10 +33,14 @@ class MainWindow:
         titulo = ctk.CTkLabel(
             self.root,
             text="AcolheMind",
-            font=("Arial", 24, "bold")
+            font=("Arial", 28, "bold")
         )
 
         titulo.pack(pady=20)
+
+        # ==========================
+        # Cadastro Paciente
+        # ==========================
 
         self.nome = ctk.CTkEntry(
             self.root,
@@ -43,7 +48,7 @@ class MainWindow:
             placeholder_text="Nome do paciente"
         )
 
-        self.nome.pack(pady=10)
+        self.nome.pack(pady=5)
 
         self.condicao = ctk.CTkEntry(
             self.root,
@@ -51,38 +56,7 @@ class MainWindow:
             placeholder_text="Condição"
         )
 
-        self.condicao.pack(pady=10)
-
-        self.paciente_selecionado = ctk.CTkComboBox(
-            self.root,
-            values=["Selecione um paciente"]
-        )
-
-        self.paciente_selecionado.pack(pady=10)
-
-        self.motivo = ctk.CTkEntry(
-            self.root,
-            width=600,
-            placeholder_text="Motivo da consulta"
-        )
-
-        self.motivo.pack(pady=10)
-
-        self.sintoma = ctk.CTkTextbox(
-            self.root,
-            width=700,
-            height=120
-        )
-
-        self.sintoma.pack(pady=10)
-
-        self.observacao = ctk.CTkTextbox(
-            self.root,
-            width=700,
-            height=120
-        )
-
-        self.observacao.pack(pady=10)
+        self.condicao.pack(pady=5)
 
         salvar_btn = ctk.CTkButton(
             self.root,
@@ -90,7 +64,61 @@ class MainWindow:
             command=self.salvar_paciente
         )
 
-        salvar_btn.pack(pady=5)
+        salvar_btn.pack(pady=10)
+
+        # ==========================
+        # Seleção Paciente
+        # ==========================
+
+        self.paciente_selecionado = ctk.CTkComboBox(
+            self.root,
+            values=["Selecione um paciente"],
+            width=500
+        )
+
+        self.paciente_selecionado.pack(pady=10)
+
+        # ==========================
+        # Consulta
+        # ==========================
+
+        self.motivo = ctk.CTkEntry(
+            self.root,
+            width=700,
+            placeholder_text="Motivo da consulta"
+        )
+
+        self.motivo.pack(pady=5)
+
+        lbl_sintoma = ctk.CTkLabel(
+            self.root,
+            text="Sintomas"
+        )
+
+        lbl_sintoma.pack()
+
+        self.sintoma = ctk.CTkTextbox(
+            self.root,
+            width=700,
+            height=120
+        )
+
+        self.sintoma.pack(pady=5)
+
+        lbl_obs = ctk.CTkLabel(
+            self.root,
+            text="Observações"
+        )
+
+        lbl_obs.pack()
+
+        self.observacao = ctk.CTkTextbox(
+            self.root,
+            width=700,
+            height=120
+        )
+
+        self.observacao.pack(pady=5)
 
         consulta_btn = ctk.CTkButton(
             self.root,
@@ -98,35 +126,63 @@ class MainWindow:
             command=self.salvar_consulta
         )
 
-        consulta_btn.pack(pady=5)
+        consulta_btn.pack(pady=10)
+
         historico_btn = ctk.CTkButton(
             self.root,
             text="Ver Histórico",
             command=self.carregar_historico
         )
 
-        historico_btn.pack(
-            pady=5
+        historico_btn.pack(pady=5)
+
+        # ==========================
+        # Lista de Pacientes
+        # ==========================
+
+        lbl_lista = ctk.CTkLabel(
+            self.root,
+            text="Pacientes cadastrados"
         )
+
+        lbl_lista.pack()
 
         self.lista_pacientes = ctk.CTkTextbox(
             self.root,
-            width=700,
-            height=180
+            width=900,
+            height=150
         )
 
-        self.lista_pacientes.pack(pady=20)
+        self.lista_pacientes.pack(
+            pady=10
+        )
+
+        # ==========================
+        # Histórico
+        # ==========================
+
+        lbl_hist = ctk.CTkLabel(
+            self.root,
+            text="Histórico de Consultas"
+        )
+
+        lbl_hist.pack()
+
         self.historico = ctk.CTkTextbox(
             self.root,
-            width=700,
-            height=200
+            width=900,
+            height=250
         )
 
         self.historico.pack(
-            pady=20
+            pady=10
         )
 
         self.atualizar_lista()
+
+    # ====================================
+    # Pacientes
+    # ====================================
 
     def atualizar_lista(self):
 
@@ -135,7 +191,9 @@ class MainWindow:
             "end"
         )
 
-        pacientes = PacienteRepository.listar()
+        pacientes = (
+            PacienteRepository.listar()
+        )
 
         nomes = []
 
@@ -147,9 +205,9 @@ class MainWindow:
 
             self.lista_pacientes.insert(
                 "end",
-                f"{paciente[0]} - "
-                f"{paciente[1]} - "
-                f"{paciente[2]}\n"
+                f"ID: {paciente[0]} | "
+                f"Nome: {paciente[1]} | "
+                f"Condição: {paciente[2]}\n"
             )
 
         if nomes:
@@ -164,7 +222,10 @@ class MainWindow:
 
         condicao = self.condicao.get()
 
-        if not nome or not condicao:
+        if not nome:
+            return
+
+        if not condicao:
             return
 
         PacienteRepository.salvar(
@@ -184,12 +245,17 @@ class MainWindow:
 
         self.atualizar_lista()
 
+    # ====================================
+    # Consultas
+    # ====================================
+
     def salvar_consulta(self):
 
-        paciente = self.paciente_selecionado.get()
+        paciente = (
+            self.paciente_selecionado.get()
+        )
 
         if paciente == "Selecione um paciente":
-            print("Selecione um paciente")
             return
 
         paciente_id = int(
@@ -201,12 +267,12 @@ class MainWindow:
         sintoma = self.sintoma.get(
             "0.0",
             "end"
-        )
+        ).strip()
 
         observacao = self.observacao.get(
             "0.0",
             "end"
-        )
+        ).strip()
 
         ConsultaRepository.salvar(
             paciente_id,
@@ -222,10 +288,21 @@ class MainWindow:
             observacao
         )
 
-        print("CONSULTA GRAVADA")
+        print(
+            "CONSULTA GRAVADA"
+        )
+
+        self.carregar_historico()
+
+    # ====================================
+    # Histórico
+    # ====================================
+
     def carregar_historico(self):
 
-        paciente = self.paciente_selecionado.get()
+        paciente = (
+            self.paciente_selecionado.get()
+        )
 
         if paciente == "Selecione um paciente":
             return
@@ -246,16 +323,32 @@ class MainWindow:
             "end"
         )
 
-        for consulta in consultas:
+        if len(consultas) == 0:
 
             self.historico.insert(
-                "end",
+                "0.0",
+                "Nenhuma consulta encontrada."
+            )
+
+            return
+
+        texto = ""
+
+        for consulta in consultas:
+
+            texto += (
                 f"Data: {consulta[3]}\n"
                 f"Motivo: {consulta[0]}\n"
                 f"Sintoma: {consulta[1]}\n"
                 f"Observação: {consulta[2]}\n"
-                "------------------------\n"
+                "\n"
+                "----------------------------------------\n\n"
             )
+
+        self.historico.insert(
+            "0.0",
+            texto
+        )
 
     def executar(self):
 
