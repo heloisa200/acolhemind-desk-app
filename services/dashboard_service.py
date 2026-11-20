@@ -1,3 +1,5 @@
+import os
+
 from database.connection import conectar
 
 
@@ -44,9 +46,38 @@ class DashboardService:
         return total
 
     @staticmethod
+    def total_pdfs():
+
+        pasta = "exports"
+
+        if not os.path.exists(
+            pasta
+        ):
+            return 0
+
+        total = 0
+
+        for arquivo in os.listdir(
+            pasta
+        ):
+
+            if arquivo.lower().endswith(
+                ".pdf"
+            ):
+                total += 1
+
+        return total
+
+    @staticmethod
     def resumo():
 
         return {
-            "pacientes": DashboardService.total_pacientes(),
-            "consultas": DashboardService.total_consultas()
+            "pacientes":
+                DashboardService.total_pacientes(),
+
+            "consultas":
+                DashboardService.total_consultas(),
+
+            "pdfs":
+                DashboardService.total_pdfs()
         }
