@@ -4,7 +4,10 @@ from database.connection import conectar
 class PacienteRepository:
 
     @staticmethod
-    def salvar(nome, condicao):
+    def salvar(
+        nome,
+        condicao
+    ):
 
         conn = conectar()
 
@@ -55,3 +58,56 @@ class PacienteRepository:
         conn.close()
 
         return pacientes
+
+    @staticmethod
+    def atualizar(
+        paciente_id,
+        nome,
+        condicao
+    ):
+
+        conn = conectar()
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            UPDATE pacientes
+            SET
+                nome = ?,
+                condicao = ?
+            WHERE id = ?
+            """,
+            (
+                nome,
+                condicao,
+                paciente_id
+            )
+        )
+
+        conn.commit()
+
+        conn.close()
+
+    @staticmethod
+    def excluir(
+        paciente_id
+    ):
+
+        conn = conectar()
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            """
+            DELETE FROM pacientes
+            WHERE id = ?
+            """,
+            (
+                paciente_id,
+            )
+        )
+
+        conn.commit()
+
+        conn.close()
