@@ -1,16 +1,16 @@
 import sqlite3
+from pathlib import Path
+
+# Caminho absoluto: funciona não importa de qual pasta você rode o app
+DB_PATH = Path(__file__).resolve().parent / "acolhemind.db"
 
 
 def conectar():
-    return sqlite3.connect(
-        "database/acolhemind.db"
-    )
+    return sqlite3.connect(DB_PATH)
 
 
 def criar_banco():
-
     conn = conectar()
-
     cursor = conn.cursor()
 
     # Tabela de pacientes
@@ -34,6 +34,20 @@ def criar_banco():
             sintoma TEXT,
             observacao TEXT,
             data_consulta DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+        """
+    )
+
+    # Tabela de usuários (administrador). A senha NUNCA é guardada em texto:
+    # só o hash (PBKDF2) e o salt.
+    cursor.execute(
+        """
+        CREATE TABLE IF NOT EXISTS usuarios (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            usuario TEXT NOT NULL UNIQUE,
+            senha_hash TEXT NOT NULL,
+            salt TEXT NOT NULL,
+            criado_em DATETIME DEFAULT CURRENT_TIMESTAMP
         )
         """
     )
