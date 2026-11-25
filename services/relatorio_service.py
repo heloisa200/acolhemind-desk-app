@@ -1,27 +1,48 @@
-from services.pdf_service import gerar_pdf
+from services.pdf_service import (
+    gerar_pdf
+)
+
+from services.ia_resumo_service import (
+    IAResumoService
+)
 
 
 def gerar_relatorio_pdf(
     paciente,
+    paciente_id,
     motivo,
     sintoma,
     observacao
 ):
 
+    resumo_ia = (
+        IAResumoService.resumir_paciente(
+            paciente_id
+        )
+    )
+
     texto = f"""
 ACOLHEMIND
 
-Paciente:
+PACIENTE:
 {paciente}
 
-Motivo:
+MOTIVO:
 {motivo}
 
-Sintomas:
+SINTOMAS:
 {sintoma}
 
-Observações:
+OBSERVACOES:
 {observacao}
+
+--------------------------------
+
+RESUMO GERADO PELA IA
+
+{resumo_ia}
+
+--------------------------------
 """
 
     arquivo = (
@@ -32,3 +53,5 @@ Observações:
         texto,
         arquivo
     )
+
+    return arquivo
